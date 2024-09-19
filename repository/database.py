@@ -37,6 +37,11 @@ def create_tables():
                     PPGRatio FLOAT NOT NULL,
                     CONSTRAINT fk_stats_player FOREIGN KEY (player_id) REFERENCES players(player_id)
                 );
+                CREATE TABLE IF NOT EXISTS fantasy_teams (
+                    id SERIAL PRIMARY KEY,
+                    team_name VARCHAR(255) NOT NULL,
+                    player_ids TEXT[]
+                );
                 """
             )
             connection.commit()

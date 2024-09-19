@@ -12,11 +12,20 @@ def create_season(season: Season):
             ''', (season.player_id, season.player_name, season.team, season.position, season.season, season.points, season.games, season.turnovers, season.assists, season.two_percent, season.three_percent))
             connection.commit()
 
+def get_position_by_player_id(player_id: str) -> str:
+    with get_db_connection() as connection, connection.cursor() as cursor:
+        cursor.execute('''
+            SELECT position as position
+            FROM seasons
+            WHERE player_id = %s;
+            ''', (player_id,))
+        result = cursor.fetchone()
+        return result['position']
 
-def get_seasons_by_position_and_season(position: str, season: str = None) -> List[Season]:
+def fetch_players(position: str, season: str = None) -> List[Season]:
     with get_db_connection() as connection, connection.cursor() as cursor:
         if season:
-            cursor.execute('SELECT * FROM seasons WHERE position = %s AND season = %s', (position, season))
+            cursor.execute('SELECT * FROM seasons WHERE position = %s AND season = %s', (position, int(season)))
         else:
             cursor.execute('SELECT * FROM seasons WHERE position = %s', (position,))
 
@@ -32,7 +41,6 @@ def all_player_seasons(player_id: str) -> List[int]:
             ORDER BY season;
         ''', (player_id,))
         seasons = cursor.fetchall()
-        print(f"Fetched seasons: {seasons}")  # Debugging print
         return [season['season'] for season in seasons]
 
 def two_percent_for_all_seasons(player_id: str) -> float:

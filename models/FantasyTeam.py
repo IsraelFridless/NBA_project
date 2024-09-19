@@ -7,4 +7,5 @@ from models.Player import Player
 @dataclass
 class FantasyTeam:
     team_name: str
-    players: List[Player]
+    player_ids: List[str]
+    id: int = None
