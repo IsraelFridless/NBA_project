@@ -1,4 +1,4 @@
-from models.Season import Season
+from models.season import Season
 
 
 def convert_to_season(obj: dict) -> Season:

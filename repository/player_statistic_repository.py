@@ -1,6 +1,6 @@
 from typing import List
 
-from models.Season import Season
+from models.season import Season
 from models.player_statistics import PlayerStatistics
 from repository.database import get_db_connection
 

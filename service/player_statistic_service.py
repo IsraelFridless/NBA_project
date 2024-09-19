@@ -1,4 +1,4 @@
-from models.Season import Season
+from models.season import Season
 from models.player_statistics import PlayerStatistics
 from repository.player_statistic_repository import get_position_average
 
