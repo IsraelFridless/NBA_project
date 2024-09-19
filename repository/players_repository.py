@@ -8,6 +8,6 @@ def create_player(player: Player):
                 INSERT INTO players (player_id, player_name)
                 VALUES (%s, %s)
                 ON CONFLICT (player_id) DO NOTHING
-            ''', (player.playerId, player.playerName))
+            ''', (player.player_id, player.player_name))
             connection.commit()
 

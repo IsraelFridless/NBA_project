@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 @dataclass
-class Player:
+class PlayerStatistics:
     player_id: str
-    player_name: str
-
+    ATR: float
+    PPGRatio: float

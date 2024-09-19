@@ -3,8 +3,8 @@ from dataclasses import dataclass, field
 
 @dataclass
 class Season:
-    playerId: str
-    playerName: str
+    player_id: str
+    player_name: str
     team: str
     position: str
     season: int
@@ -12,5 +12,5 @@ class Season:
     games: int
     turnovers: int
     assists: int
-    twoPercent: float
-    threePercent: float
+    two_percent: float
+    three_percent: float

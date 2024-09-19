@@ -9,7 +9,8 @@ def get_db_connection():
 
 
 def create_tables():
-    with get_db_connection() as connection, connection.cursor() as cursor:
+    with get_db_connection() as connection:
+        with connection.cursor() as cursor:
             cursor.execute(
                 """
                 CREATE TABLE IF NOT EXISTS players (
@@ -28,12 +29,16 @@ def create_tables():
                     assists INT NOT NULL,
                     two_percent FLOAT NOT NULL,
                     three_percent FLOAT NOT NULL,
-                    CONSTRAINT fk_player_id FOREIGN KEY (player_id) REFERENCES players(player_id)
+                    CONSTRAINT fk_season_player FOREIGN KEY (player_id) REFERENCES players(player_id)
+                );
+                CREATE TABLE IF NOT EXISTS player_statistics (
+                    player_id VARCHAR(255) PRIMARY KEY,
+                    ATR FLOAT NOT NULL,
+                    PPGRatio FLOAT NOT NULL,
+                    CONSTRAINT fk_stats_player FOREIGN KEY (player_id) REFERENCES players(player_id)
                 );
                 """
             )
             connection.commit()
 
 
-if __name__ == '__main__':
-    create_tables()
