@@ -11,3 +11,13 @@ def create_player(player: Player):
             ''', (player.player_id, player.player_name))
             connection.commit()
 
+
+def get_name_by_id(player_id: str) -> str:
+    with get_db_connection() as connection, connection.cursor() as cursor:
+        cursor.execute('''
+            SELECT player_name 
+            FROM players
+            WHERE player_id = %s
+        ''', (player_id,))
+        res = cursor.fetchone()
+        return res['player_name']

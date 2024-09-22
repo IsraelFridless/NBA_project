@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from models.season import Season
 from repository.database import get_db_connection
@@ -32,17 +32,6 @@ def fetch_players(position: str, season: str = None) -> List[Season]:
         seasons = cursor.fetchall()
         return [Season(**s) for s in seasons]
 
-def all_player_seasons(player_id: str) -> List[int]:
-    with get_db_connection() as connection, connection.cursor() as cursor:
-        cursor.execute('''
-            SELECT DISTINCT season
-            FROM seasons
-            WHERE player_id = %s
-            ORDER BY season;
-        ''', (player_id,))
-        seasons = cursor.fetchall()
-        return [season['season'] for season in seasons]
-
 def two_percent_for_all_seasons(player_id: str) -> float:
     with get_db_connection() as connection, connection.cursor() as cursor:
         cursor.execute('''
@@ -62,3 +51,52 @@ def three_percent_for_all_seasons(player_id: str) -> float:
         ''', (player_id,))
         result = cursor.fetchone()
         return result['total_three_percent']
+
+# function to fetch all the seasons of a specific player => List[Season]
+def get_player_seasons(player_id) -> List[Season]:
+    with get_db_connection() as connection, connection.cursor() as cursor:
+        cursor.execute('''
+            SELECT * FROM seasons
+            WHERE player_id = %s
+        ''', (player_id,))
+        seasons = cursor.fetchall()
+        return [Season(**s) for s in seasons]
+
+
+def get_player_points_for_all_seasons(player_id: str) -> int:
+    with get_db_connection() as connection, connection.cursor() as cursor:
+        cursor.execute('''
+            SELECT SUM(points) as total_points
+            FROM seasons
+            WHERE player_id = %s;
+        ''', (player_id,))
+        result = cursor.fetchone()
+        return result['total_points']
+
+
+def get_all_player_games(player_id: str) -> int:
+    with get_db_connection() as connection, connection.cursor() as cursor:
+        cursor.execute('''
+            SELECT SUM(games) as total_games
+            FROM seasons
+            WHERE player_id = %s;
+        ''', (player_id,))
+        result = cursor.fetchone()
+        return result['total_games']
+
+def get_seasons_from_db() -> List[Season]:
+    with get_db_connection() as connection, connection.cursor() as cursor:
+        cursor.execute('SELECT * FROM seasons')
+        seasons = cursor.fetchall()
+        return [Season(**s) for s in seasons]
+
+def get_position_average_points(position: str) -> float:
+    with get_db_connection() as connection:
+        with connection.cursor() as cursor:
+            cursor.execute('''
+                SELECT AVG(points) AS avg_points
+                FROM seasons
+                WHERE position = %s
+            ''', (position,))
+            avg_points = cursor.fetchone()
+            return avg_points["avg_points"]

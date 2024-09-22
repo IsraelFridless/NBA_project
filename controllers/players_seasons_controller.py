@@ -1,8 +1,9 @@
-from service.player_statistic_service import get_atr, get_ppg_ratio
+from service.player_statistic_service import calculate_player_atr, calculate_player_ppg_ratio_for_all_seasons
 
 
 from flask import Blueprint, request, jsonify
 import service.season_service as season_service
+import repository.player_statistic_repository as player_statistics_repo
 
 players_blueprint = Blueprint("players", __name__)
 
@@ -24,6 +25,6 @@ def get_players_by_position():
              'games': s.games,
              'two_percent': season_service.get_two_percent_for_all_seasons(s.player_id),
              'three_percent': season_service.get_three_percent_for_all_seasons(s.player_id),
-             'ATR': get_atr(s),
-             'PPG_ratio': get_ppg_ratio(s)
+             'ATR': player_statistics_repo.get_player_atr(s.player_id),
+             'PPG_ratio': player_statistics_repo.get_player_ppg(s.player_id)
          } for s in seasons])
